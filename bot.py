@@ -38,8 +38,7 @@ df = pd.DataFrame(data)
 TOKEN = '7607579283:AAHRk9hLqlSFzluLc5DJINwQxw_EST19EFY'  # <-- Replace this with your actual token
 bot = telebot.TeleBot(TOKEN)
 
-excel_file_path = 'merged_results.xlsx'
-df = pd.read_excel(excel_file_path)
+
 
 # Folders to store QR codes
 qr_diploma_folder = 'qr_diplomas'
@@ -214,6 +213,14 @@ region_coordinates = {
         "place_position": (1400, 650) 
     }
 }
+
+def refresh_sheet_data():
+    global df  # Make sure it updates the global df
+    data = sheet.get_all_records()
+    df = pd.DataFrame(data)
+    print("🔄 Данные Google Sheet обновлены!")
+
+
 def rename_subject(subject_name):
     if not subject_name:
         return ''
@@ -440,10 +447,14 @@ def start(message):
     chat_id = message.chat.id
     reset_user(chat_id)
 
+    refresh_sheet_data()  # 🔄 Refresh here
+
     markup = types.ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
     markup.add(types.KeyboardButton("Поиск по имени"), types.KeyboardButton("Поиск по email"))
 
     bot.send_message(chat_id, "Привет! Выбери способ поиска:", reply_markup=markup)
+
+    
 
 # ========== SEARCH METHOD SELECTION ==========
 @bot.message_handler(func=lambda message: message.text in ["Поиск по имени", "Поиск по email"])
