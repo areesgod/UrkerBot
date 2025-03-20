@@ -6,7 +6,24 @@ import re
 import qrcode
 from PIL import Image, ImageDraw, ImageFont
 from io import BytesIO
+import gspread
+from oauth2client.service_account import ServiceAccountCredentials
+# Define scope
+scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
+creds = ServiceAccountCredentials.from_json_keyfile_name('raribxy-bb9d464839a3.json', scope)
+client = gspread.authorize(creds)
 
+
+
+
+
+# Open your spreadsheet and worksheet
+GOOGLE_SHEET_NAME = 'UrkerData'  # Spreadsheet name
+worksheet_name = 'Sheet1'  # Worksheet name inside spreadsheet
+sheet = client.open(GOOGLE_SHEET_NAME).worksheet(worksheet_name)
+# Load initial data into DataFrame
+data = sheet.get_all_records()
+df = pd.DataFrame(data)
 # ==========================
 # CONFIGURATION
 # ==========================
@@ -459,7 +476,7 @@ def handle_message(message):
 
         selected_region = region_list[region_index]
         df.at[idx, 'Область'] = selected_region
-        save_excel()
+        save_to_google_sheet()
 
         record = df.loc[idx]
 
@@ -480,7 +497,7 @@ def handle_message(message):
             return
 
         df.at[idx, 'ФИО учителя'] = text
-        save_excel()
+        save_to_google_sheet()
 
         record = df.loc[idx]
 
@@ -501,7 +518,7 @@ def handle_message(message):
             return
 
         df.at[idx, 'ФИО'] = text
-        save_excel()
+        save_to_google_sheet()
 
         record = df.loc[idx]
 
@@ -634,9 +651,17 @@ def reset_user(chat_id):
     pending_region_selection.pop(chat_id, None)
     pending_selection.pop(chat_id, None)
 
-def save_excel():
-    """Save the current DataFrame to the Excel file"""
-    df.to_excel(excel_file_path, index=False)
+def save_to_google_sheet():
+    # Clean up NaN values
+    clean_df = df.fillna('')
+
+    # Convert to list of lists (header + data)
+    data = [clean_df.columns.tolist()] + clean_df.values.tolist()
+
+    # Push to Google Sheet
+    sheet.update(data)
+
+    print("Google Sheet successfully updated!")
 
 
 # ========== MAIN ==========
