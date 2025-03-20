@@ -3,14 +3,22 @@ from telebot import types
 import pandas as pd
 import os
 import re
+import requests
+import json
 import qrcode
 from PIL import Image, ImageDraw, ImageFont
 from io import BytesIO
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
+from google.oauth2 import service_account
 # Define scope
+dropbox_link = 'https://www.dropbox.com/scl/fi/avc052ue08x6gn20g0c6x/raribxy-bb9d464839a3.json?rlkey=av8ohjqtaxhqbp3tsg00o1wsk&st=x45ajabc&dl=1'
+response = requests.get(dropbox_link)
+if response.status_code != 200:
+    raise Exception(f"Failed to download file: {response.status_code}")
+service_account_info = json.loads(response.content)
 scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
-creds = ServiceAccountCredentials.from_json_keyfile_name('raribxy-bb9d464839a3.json', scope)
+creds = service_account.Credentials.from_service_account_info(service_account_info, scopes=scope)
 client = gspread.authorize(creds)
 
 
@@ -27,7 +35,7 @@ df = pd.DataFrame(data)
 # ==========================
 # CONFIGURATION
 # ==========================
-TOKEN = '7607579283:AAHRk9hLqlSFzluLc5DJINwQxw_EST19EFY'  # <-- Replace this with your actual token
+TOKEN = '7290992199:AAE_VYBPgfuht7wF2qpCuMXljdYJUSQ6Ppg'  # <-- Replace this with your actual token
 bot = telebot.TeleBot(TOKEN)
 
 excel_file_path = 'merged_results.xlsx'
