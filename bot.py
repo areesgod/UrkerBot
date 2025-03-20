@@ -315,7 +315,10 @@ def generate_diploma(record):
 
     # Determine region key for coordinates
     if region == "Астана":
-        region_key = f"Астана_{grade_group}"
+        if grade_group == "9-11":
+            region_key = "Астана"
+        else:
+            region_key = f"Астана_{grade_group}"
     else:
         region_key = region
 
