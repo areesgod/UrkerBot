@@ -370,9 +370,10 @@ def generate_diploma(record):
         img.paste(qr_img, coords['qr_position'])
 
     # ✅ Draw the place (I, II, III)
-    roman_place = place_to_roman(place)
-    if roman_place and 'place_position' in coords:
-        draw.text(coords['place_position'], roman_place, font=font5, fill='black')
+    if region!="Астана":
+        roman_place = place_to_roman(place)
+        if roman_place and 'place_position' in coords:
+            draw.text(coords['place_position'], roman_place, font=font5, fill='black')
 
 
     # Save to BytesIO and return
