@@ -563,7 +563,7 @@ def handle_message(message):
         user_input = text.lower()
 
         if state["method"] == "name":
-            matches_df = df[df['ФИО'].fillna('').str.lower().str.contains(user_input)]
+            matches_df = df[df['ФИО'].str.lower().str.contains(user_input, na=False)]
         else:
             matches_df = df[df['Email'].fillna('').str.lower().str.contains(user_input)]
 
