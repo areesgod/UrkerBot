@@ -34,7 +34,7 @@ df = pd.DataFrame(data)
 # ==========================
 # CONFIGURATION
 # ==========================
-TOKEN = '7607579283:AAHsc3sBjPP3ryRraYruR3vb-ndiZ6srAco'  # <-- Replace this with your actual token
+TOKEN = '7290992199:AAFaObgKk7s9p_JYyosNsTw2_Gw1PyeJuic'  # <-- Replace this with your actual token
 bot = telebot.TeleBot(TOKEN)
 
 
