@@ -10,6 +10,7 @@ from PIL import Image, ImageDraw, ImageFont
 from io import BytesIO
 import gspread
 from google.oauth2 import service_account
+from dotenv import load_dotenv
 # Define scope
 dropbox_link = 'https://www.dropbox.com/scl/fi/avc052ue08x6gn20g0c6x/raribxy-bb9d464839a3.json?rlkey=av8ohjqtaxhqbp3tsg00o1wsk&st=x45ajabc&dl=1'
 response = requests.get(dropbox_link)
@@ -34,7 +35,8 @@ df = pd.DataFrame(data)
 # ==========================
 # CONFIGURATION
 # ==========================
-TOKEN = '7290992199:AAFaObgKk7s9p_JYyosNsTw2_Gw1PyeJuic'  # <-- Replace this with your actual token
+load_dotenv()
+TOKEN = os.getenv("BOT_TOKEN")
 bot = telebot.TeleBot(TOKEN)
 
 
